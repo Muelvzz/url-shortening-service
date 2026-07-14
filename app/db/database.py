@@ -1,15 +1,15 @@
 from ..core.config import supabase_database
-from ..utils.short_code import generate_short_code
+from ..utils.short_url import create_short_url
 from ..utils.datetime_json import convert_datetime_to_json
 from datetime import datetime
 
 def insert_url(url: str):
-  short_code = generate_short_code()
+  short_url = create_short_url(url)
   date = convert_datetime_to_json(datetime.now())
 
   data = supabase_database.table("url-table").insert({
     "url": url,
-    "shortcode": short_code,
+    "short_url": short_url,
     "updated_at": date,
   }).execute()
 

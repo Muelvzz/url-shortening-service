@@ -3,7 +3,7 @@ from datetime import datetime
 
 class UrlBase(BaseModel):
   url: str
-  shortcode: str
+  short_url: str
   updated_at: datetime
 
 
