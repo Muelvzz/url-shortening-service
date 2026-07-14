@@ -10,7 +10,7 @@ def insert_url(url: str):
   data = supabase_database.table("url-table").insert({
     "url": url,
     "shortcode": short_code,
-    "updated_at": date
+    "updated_at": date,
   }).execute()
 
   return data.data[0]
