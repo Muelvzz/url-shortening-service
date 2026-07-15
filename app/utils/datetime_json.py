@@ -1,11 +1,8 @@
 import json
 
 def convert_datetime_to_json(datetime):
+  if not datetime:
+    raise ValueError("The provided datetime is None.")
+
   json_datetime = json.dumps(datetime.now(), default=str)
   return json_datetime
-
-if __name__ == "__main__":
-  from datetime import datetime
-
-  json_datetime = convert_datetime_to_json(datetime.now())
-  print(json_datetime)
