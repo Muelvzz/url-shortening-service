@@ -1,5 +1,4 @@
 from .dummy_table_data import dummy_table_data
-from ...app.db.database import view_all_urls
 
 class DummyInsertResult:
     def __init__(self, row):
@@ -9,8 +8,8 @@ class DummyInsertResult:
         return self
 
 
-class DummyViewAllResult:
-    def __init(self, data: list):
+class DummySelectResult:
+    def __init__(self, data: list):
         self.data = data
 
     def execute(self): 
@@ -22,12 +21,13 @@ class DummyViewAllResult:
 class DummyTable:
     def __init__(
             self, 
-            expected_url: str | None, 
-            expected_short_url: str | None, 
-            all_data = dummy_table_data
+            expected_url: str, 
+            expected_short_url: str, 
+            all_data = None
         ):
         self.expected_url = expected_url
         self.expected_short_url = expected_short_url
+        self.all_data = dummy_table_data if all_data is None else all_data
 
     def insert(self, row):
         assert row["url"] == self.expected_url
@@ -35,8 +35,8 @@ class DummyTable:
         assert "updated_at" in row
         return DummyInsertResult(row)
     
-    def view_all():
-        pass
+    def select(self, *_args, **_kwargs):
+        return DummySelectResult(self.all_data)
 
 
 class DummyClient:
@@ -44,5 +44,6 @@ class DummyClient:
         self._table = table
 
     def table(self, name):
-        assert name == "url-table"
+        if name not in {"url-table", "*"}:
+            raise AssertionError(f"Unexpected table name: {name}")
         return self._table
