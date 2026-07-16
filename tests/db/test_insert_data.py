@@ -2,6 +2,13 @@ import pytest
 from app.db import database
 from tests.core.dummy_database import DummyClient, DummyTable
 
+@pytest.mark.parametrize(
+    "bad_input, error_message",
+    [
+        ("", "empty"),
+        ("https://tinyurl.com/abc123", "already a shortened"),
+    ],
+)
 
 def test_insert_url_success(monkeypatch):
     url = "https://github.com/Muelvzz/url-shortening-service"
@@ -19,15 +26,7 @@ def test_insert_url_success(monkeypatch):
     assert result["url"] == url
     assert result["short_url"] == short_url
     assert isinstance(result["updated_at"], str)
-
-
-@pytest.mark.parametrize(
-    "bad_input, error_message",
-    [
-        ("", "empty"),
-        ("https://tinyurl.com/abc123", "already a shortened"),
-    ],
-)
+    
 
 def test_insert_url_validation_errors(monkeypatch, bad_input, error_message):
     def fake_create_short_url(value):

@@ -15,7 +15,7 @@ def insert_url(url: str):
             "short_url": short_url,
             "updated_at": date,
         }).execute()
-        
+
     except Exception as e:
         raise RuntimeError(
             f"Error occurred while inserting the URL into the database: {e}"
@@ -26,6 +26,25 @@ def insert_url(url: str):
 
     return data.data[0]
 
+def view_all_urls():
+    try:
+        data = supabase_database.table("*").select("*").execute()
+        return data
+
+    except Exception as e:
+        raise RuntimeError(
+            f"Error occured while fetching all the URL into the database: {e}"
+        ) from e
+    
+    if not getattr(data, "data", None) or len(data.data) == 0:
+        raise RuntimeError("There are no existing data.")
+
+def view_selected_url(id: int):
+    try:
+        pass
+
+    except Exception as e:
+        pass
 
 if __name__ == "__main__":
     results = supabase_database.table("*").select("*").execute()
