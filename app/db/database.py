@@ -38,15 +38,23 @@ def view_all_urls():
     if not getattr(all_data, "data", None) or len(all_data.data) == 0:
         raise RuntimeError("There are no existing data.")
     
-    return all_data
+    return all_data.data
 
 def view_selected_url(id: int):
     try:
-        pass
+       select_data = supabase_database.table("url-table").select("*").eq("id", id).single().execute() 
 
     except Exception as e:
-        pass
+        raise RuntimeError(
+            f"Error occured while retrieving the selected url: {e}"
+        ) from e
+    
+    if not getattr(select_data, "data", None) or len(select_data.data) == 0:
+        raise RuntimeError(f"Id {id} could not found.")
+    
+    return select_data.data
+
 
 if __name__ == "__main__":
-    results = supabase_database.table("*").select("*").execute()
+    results = supabase_database.table("url-table").select("*").execute()
     print(results)

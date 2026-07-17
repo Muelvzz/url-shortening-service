@@ -12,5 +12,5 @@ def test_select_all_url_success(monkeypatch):
   result = database.view_all_urls()
   
   assert result is not None
-  assert result.data == dummy_table_data
-  assert len(result.data) == len(dummy_table_data)
+  assert result == dummy_table_data
+  assert len(result) == len(dummy_table_data)
