@@ -17,7 +17,6 @@ def show_error(e):
 async def create_shorten_url(payload: UrlCreate):
   try:
     insert_url_from_db = database.insert_url(payload.url)
-
     return insert_url_from_db
   
   except Exception as e:
@@ -27,8 +26,16 @@ async def create_shorten_url(payload: UrlCreate):
 async def get_all_url():
   try:
     all_url = database.view_all_urls()
-
     return all_url
+  
+  except Exception as e:
+    show_error(e)
+
+@router.get("/url/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=UrlOut)
+async def select_url(id: int):
+  try:
+    selected_url = database.view_selected_url(id)
+    return selected_url
   
   except Exception as e:
     show_error(e)

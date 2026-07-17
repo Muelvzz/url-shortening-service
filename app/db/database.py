@@ -45,15 +45,15 @@ def view_selected_url(id: int):
         raise TypeError("Characters can't be used as an Id")
 
     try:
-       select_data = (supabase_database.table("url-table").select("*").eq("id", id).single().execute()) 
+       select_data = (supabase_database.table("url-table").select("*").eq("id", id).maybe_single().execute())
 
     except Exception as e:
         raise RuntimeError(
             f"Error occured while retrieving the selected url: {e}"
         ) from e
     
-    if not getattr(select_data, "data", None) or len(select_data.data) == 0:
-        raise RuntimeError("Could not find the Id in the database.")
+    if select_data is None:
+        raise RuntimeError(f"Id {id} could not be found.")
     
     return select_data.data
 

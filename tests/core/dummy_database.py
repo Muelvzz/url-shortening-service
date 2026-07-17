@@ -23,6 +23,9 @@ class DummySelectResult:
     def single(self):
         return self
 
+    def maybe_single(self):
+        return self
+
 class DummyTable:
     def __init__(
             self, 
