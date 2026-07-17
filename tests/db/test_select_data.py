@@ -24,8 +24,7 @@ def test_select_data_success(monkeypatch):
     ("bad_input", "error_message"),
     [
       (random.choice(string.ascii_letters), "Characters can't be used as an Id"),
-      (random.choice(string.punctuation), "Symbols can't be used as an Id"),
-      (10, "Url's was not found in the database")
+      (random.choice(string.punctuation), "Characters can't be used as an Id")
     ],
 )
 
@@ -38,6 +37,9 @@ def test_select_data_error(monkeypatch, bad_input, error_message):
 
   with pytest.raises(TypeError, match=error_message):
     database.view_selected_url(bad_input)
+
+  with pytest.raises(RuntimeError, match="Could not find the Id in the database."):
+    database.view_selected_url(10)
 
 
 def test_select_data_failure(monkeypatch):

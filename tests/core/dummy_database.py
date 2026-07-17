@@ -12,11 +12,16 @@ class DummySelectResult:
     def __init__(self, data: list):
         self.data = data
 
+    def eq(self, column, value):
+        if column == "id":
+            self.data = [row for row in self.data if row.get("id") == value]
+        return self
+
     def execute(self): 
         return self
     
-    def select(self, id: int | None):
-        return self.data[id]
+    def single(self):
+        return self
 
 class DummyTable:
     def __init__(

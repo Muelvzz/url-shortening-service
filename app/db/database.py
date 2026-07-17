@@ -41,8 +41,11 @@ def view_all_urls():
     return all_data.data
 
 def view_selected_url(id: int):
+    if isinstance(id, bool) or not isinstance(id, int):
+        raise TypeError("Characters can't be used as an Id")
+
     try:
-       select_data = supabase_database.table("url-table").select("*").eq("id", id).single().execute() 
+       select_data = (supabase_database.table("url-table").select("*").eq("id", id).single().execute()) 
 
     except Exception as e:
         raise RuntimeError(
@@ -50,7 +53,7 @@ def view_selected_url(id: int):
         ) from e
     
     if not getattr(select_data, "data", None) or len(select_data.data) == 0:
-        raise RuntimeError(f"Id {id} could not found.")
+        raise RuntimeError("Could not find the Id in the database.")
     
     return select_data.data
 
