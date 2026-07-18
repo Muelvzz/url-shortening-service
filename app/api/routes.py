@@ -2,7 +2,7 @@ from fastapi import APIRouter, status, HTTPException
 from typing import List
 
 from ..db import database
-from ..schemas.url_schema import UrlCreate, UrlOut
+from ..schemas.url_schema import UrlCreate, UrlOut, UrlMessageOut
 
 router = APIRouter()
 
@@ -37,5 +37,14 @@ async def select_url(id: int):
     selected_url = database.view_selected_url(id)
     return selected_url
   
+  except Exception as e:
+    show_error(e)
+
+@router.delete("/url/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=UrlOut)
+def delete_url(id: int):
+  try:
+    deleted_url = database.delete_url(id)
+    return deleted_url
+    
   except Exception as e:
     show_error(e)

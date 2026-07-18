@@ -4,7 +4,7 @@ from app.db import database
 from tests.core.dummy_database import DummyClient, DummyTable
 from tests.core.dummy_table_data import dummy_table_data
 
-def test_select_data_success(monkeypatch):
+def test_delete_data_success(monkeypatch):
   first_id = 1
   second_id = 3
 
@@ -14,8 +14,8 @@ def test_select_data_success(monkeypatch):
     DummyClient(DummyTable(None, None, all_data = dummy_table_data))
   )
 
-  first_result = database.view_selected_url(first_id)
-  second_result = database.view_selected_url(second_id)
+  first_result = database.delete_url(first_id)
+  second_result = database.delete_url(second_id)
 
   assert first_result is not None
   assert second_result is not None
@@ -28,7 +28,7 @@ def test_select_data_success(monkeypatch):
   ],
 )
 
-def test_select_data_error(monkeypatch, bad_input, error_message):
+def test_delete_data_error(monkeypatch, bad_input, error_message):
   monkeypatch.setattr(
     database,
     "supabase_database",
@@ -36,10 +36,6 @@ def test_select_data_error(monkeypatch, bad_input, error_message):
   )
 
   with pytest.raises(TypeError, match=error_message):
-    database.view_selected_url(bad_input)
+    database.delete_url(bad_input)
 
-  assert not database.view_selected_url(10)
-
-
-def test_select_data_failure(monkeypatch):
-  pass
+  assert not database.delete_url(10)

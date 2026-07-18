@@ -25,13 +25,33 @@ class DummySelectResult:
 
     def maybe_single(self):
         return self
+    
+class DummyDeleteResult:
+    def __init__(self, all_data: list = dummy_table_data):
+        self.id = None
+        self.all_data = all_data
+
+    def eq(self, column, value):
+        if column == "id":
+            self.id = value
+        return self
+
+    def execute(self):
+        if self.id is None:
+            raise ValueError("No Id provided")
+        
+        for index, row in enumerate(self.all_data):
+            if row.get("id") == self.id:
+                return self.all_data.pop(index)
+            
+        raise KeyError(f"Id {self.id} could not be found")
 
 class DummyTable:
     def __init__(
             self, 
             expected_url: str, 
             expected_short_url: str, 
-            all_data = None
+            all_data: list = None,
         ):
         self.expected_url = expected_url
         self.expected_short_url = expected_short_url
@@ -43,8 +63,17 @@ class DummyTable:
         assert "updated_at" in row
         return DummyInsertResult(row)
     
-    def select(self, *_args, **_kwargs):
+    def select(self, 
+               *_args, 
+               **_kwargs
+            ):
         return DummySelectResult(self.all_data)
+    
+    def delete(self,
+               *_args, 
+               **_kwargs
+            ):
+        return DummyDeleteResult(self.all_data)
 
 
 class DummyClient:

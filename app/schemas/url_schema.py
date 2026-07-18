@@ -18,3 +18,6 @@ class UrlOut(UrlBase):
 
   class Config:
     from_attributes = True
+
+class UrlMessageOut(BaseModel):
+  message: str
