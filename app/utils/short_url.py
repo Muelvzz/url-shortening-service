@@ -2,7 +2,7 @@ import pyshorteners
 
 init_url_shortener = pyshorteners.Shortener()
 
-def create_short_url(url):
+def create_short_url(url: str):
   if "tinyurl.com" in url:
     raise ValueError("The provided URL is already a shortened URL.")
 

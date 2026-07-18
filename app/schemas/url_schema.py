@@ -11,6 +11,9 @@ class UrlCreate(BaseModel):
   url: str
 
 
+class UrlUpdate(UrlCreate):
+  pass
+
 class UrlOut(UrlBase):
   id: int
   access_count: int
@@ -18,6 +21,3 @@ class UrlOut(UrlBase):
 
   class Config:
     from_attributes = True
-
-class UrlMessageOut(BaseModel):
-  message: str

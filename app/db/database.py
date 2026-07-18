@@ -34,7 +34,11 @@ def insert_url(url: str):
 
 def view_all_urls():
     try:
-        all_data = supabase_database.table("url-table").select("*").execute()
+        all_data = (
+            supabase_database.table("url-table")
+            .select("*")
+            .execute()
+        )
 
     except Exception as e:
         raise RuntimeError(
@@ -50,7 +54,13 @@ def view_selected_url(id: int):
     checked_id = check_id(id)
 
     try:
-       select_data = (supabase_database.table("url-table").select("*").eq("id", checked_id).maybe_single().execute())
+       select_data = (
+           supabase_database.table("url-table")
+           .select("*")
+           .eq("id", checked_id)
+           .maybe_single()
+           .execute()
+        )
 
     except Exception as e:
         raise RuntimeError(
@@ -66,7 +76,12 @@ def delete_url(id: int):
     checked_id = check_id(id)
 
     try:
-        deleted_data = (supabase_database.table("url-table").delete().eq("id", checked_id).execute())
+        deleted_data = (
+            supabase_database.table("url-table")
+            .delete()
+            .eq("id", checked_id)
+            .execute()
+        )
 
     except Exception as e:
         raise RuntimeError(
@@ -80,6 +95,40 @@ def delete_url(id: int):
         return deleted_data.data[0] if deleted_data.data else None
 
     return deleted_data.data
+
+def update_url(id: int, url_to_update: str):
+
+    checked_id = check_id(id)
+    validated_url = validate_url(url_to_update)
+    date = convert_datetime_to_json(datetime.now())
+    short_url = create_short_url(validated_url)
+
+    try:
+
+        updated_data = (
+            supabase_database.table("url-table")
+            .update({
+            "url": validated_url,
+            "short_url": short_url,
+            "access_count": 0,
+            "updated_at": date,
+            })
+            .eq("id", checked_id)
+            .execute()
+        )
+    
+    except Exception as e:
+        raise RuntimeError(
+            f"Error occured while updating: {e}"
+        ) from e
+    
+    if not getattr(updated_data, "data", None):
+        raise RuntimeError(f"Id {checked_id} could not be found.")
+    
+    if isinstance(updated_data.data, list):
+        return updated_data.data[0] if updated_data.data else None
+    
+    return updated_data.data
 
 
 if __name__ == "__main__":
